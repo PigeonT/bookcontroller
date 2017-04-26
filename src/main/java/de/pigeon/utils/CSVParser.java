@@ -10,7 +10,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class CSVParser {
     @SuppressWarnings("unchecked")
@@ -22,16 +24,18 @@ public class CSVParser {
 
             br.lines().forEach(s -> {
 
-                Field[] fields = entityClass.getDeclaredFields();
+                Field[] superfields = entityClass.getSuperclass().getDeclaredFields();
+                Field[] subfields = entityClass.getDeclaredFields();
+                Field[] allfields = merge(superfields, subfields);
                 String[] values = s.split(";");
                 try {
                     Constructor<?> cc = entityClass.getDeclaredConstructor();
                     cc.setAccessible(true);
                     T entity = (T) cc.newInstance();
 
-                    for (int i = 0; i < fields.length; i++) {
-                        fields[i].setAccessible(true);
-                        fields[i].set(entity, values[i]);
+                    for (int i = 0; i < allfields.length; i++) {
+                        allfields[i].setAccessible(true);
+                        allfields[i].set(entity, values[i]);
                     }
                     entityList.add(entity);
                 } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
@@ -43,5 +47,21 @@ public class CSVParser {
             throw new RuntimeException(e);
         }
         return entityList;
+    }
+
+    private static Field[] merge(Field[] superfields, Field[] subfields) {
+        List<Field> l1 = new ArrayList<>();
+        Field[] returnArray = new Field[subfields.length + superfields.length];
+        for(Field f : Arrays.asList(superfields)) {
+            l1.add(f);
+        }
+        for(Field f : Arrays.asList(subfields)) {
+            l1.add(f);
+        }
+        for(int i = 0; i < l1.size(); i++)
+        {
+            returnArray[i] = l1.get(i);
+        }
+        return returnArray;
     }
 }

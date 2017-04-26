@@ -1,31 +1,17 @@
 package de.pigeon.model;
 
-public final class Book implements Entity {
+public final class Book extends ItemEntity {
 
-    private String title;
-    private String ISBN;
-    private String autoren;
     private String kurzbeschreibung;
 
-    private Book(){}
+    private Book() {
+    }
 
-    public Book(String title, String ISBN, String autoren, String kurzbeschreibung){
+    public Book(String title, String IBSN, String author, String kurzbeschreibung) {
         this.title = title;
-        this.ISBN = ISBN;
-        this.autoren = autoren;
+        this.IBSN = IBSN;
+        this.author = author;
         this.kurzbeschreibung = kurzbeschreibung;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getISBN() {
-        return ISBN;
-    }
-
-    public String getAutoren() {
-        return autoren;
     }
 
     public String getKurzbeschreibung() {
@@ -35,8 +21,8 @@ public final class Book implements Entity {
     @Override
     public String toString() {
         return "title: " + title + "\n"
-                + "isbn: " + ISBN + "\n"
-                + "author: " + autoren + "\n"
+                + "isbn: " + IBSN + "\n"
+                + "author: " + author + "\n"
                 + "kurzbeschreibung: " + kurzbeschreibung;
     }
 
@@ -44,18 +30,10 @@ public final class Book implements Entity {
     public int hashCode() {
         int hash = 13;
         hash = hash * 17 + title.hashCode();
-        hash = hash * 17 + ISBN.hashCode();
-        hash = hash * 17 + autoren.hashCode();
+        hash = hash * 17 + IBSN.hashCode();
+        hash = hash * 17 + author.hashCode();
         hash = hash * 17 + kurzbeschreibung.hashCode();
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) return true;
-        if(!(obj instanceof Book)) return false;
-        Book b = (Book) obj;
-        return this.hashCode() == b.hashCode();
     }
 
 }
