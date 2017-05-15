@@ -3,6 +3,7 @@ package de.pigeon.utils;
 
 import de.pigeon.model.Entity;
 
+import javax.management.ReflectionException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class CSVParser {
                 Field[] superfields = entityClass.getSuperclass().getDeclaredFields();
                 Field[] subfields = entityClass.getDeclaredFields();
                 Field[] allfields = merge(superfields, subfields);
+                //可能的bug,试着解析这样的line : pr-walter@optivo.de;"Pa;ul";Walter 也就是说解析csv要考虑escape character
                 String[] values = s.split(";");
                 try {
                     Constructor<?> cc = entityClass.getDeclaredConstructor();
@@ -39,11 +41,13 @@ public class CSVParser {
                     }
                     entityList.add(entity);
                 } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+//                    考虑定义自己的 ReflectionException ,不能所有的异常都包装成RuntimeException
                     throw new RuntimeException(e);
                 }
             });
 
         } catch (IOException e) {
+//            考虑定义自己的RuntimeIOException,理由同上
             throw new RuntimeException(e);
         }
         return entityList;
@@ -52,6 +56,10 @@ public class CSVParser {
     private static Field[] merge(Field[] superfields, Field[] subfields) {
         List<Field> l1 = new ArrayList<>();
         Field[] returnArray = new Field[subfields.length + superfields.length];
+//        更简单的拷贝数组
+//        System.arraycopy(subfields, 0, returnArray, 0, subfields.length);
+//        System.arraycopy(subfields, 0, returnArray, superfields.length, subfields.length);
+//        return returnArray;
         for(Field f : Arrays.asList(superfields)) {
             l1.add(f);
         }

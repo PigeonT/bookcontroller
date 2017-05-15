@@ -1,5 +1,6 @@
 package de.pigeon.manager;
 
+//去掉无意义的import
 import de.pigeon.model.Entity;
 import de.pigeon.model.ItemEntity;
 

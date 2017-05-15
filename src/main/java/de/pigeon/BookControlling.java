@@ -15,19 +15,15 @@ public final class BookControlling {
     private final BookItemManager bm = new BookItemManager("data/buecher.csv", Book.class);
     private final MagazinItemManager mm = new MagazinItemManager("data/zeitschriften.csv", Magazin.class);
     private final PeopleManager pm = new PeopleManager("data/autoren.csv");
-    private final Scanner scanner;
 
     public static void main(String[] args) {
         try {
             new BookControlling().start();
         } catch (Throwable e) {
             System.err.println(e.toString());
+            //不要用exit
             System.exit(255);
         }
-    }
-
-    public BookControlling() {
-        scanner = new Scanner(System.in);
     }
 
     private void start() throws IOException {
@@ -42,8 +38,8 @@ public final class BookControlling {
     private void initCLI() throws IOException {
 
         showInfo();
-
-        try {
+        //缩小scanner的作用域
+        try (Scanner scanner = new Scanner(System.in)){
             String s;
             while (!(s = scanner.next()).equals("q")) {
                 switch (s) {
@@ -57,11 +53,11 @@ public final class BookControlling {
                         break;
                     case "3":
                         System.out.println("Search with ISBN:");
-                        searchWithISBN();
+                        searchWithISBN(scanner);
                         break;
                     case "4":
                         System.out.println("Show all books/magazins of author: ");
-                        searchWithAuthor();
+                        searchWithAuthor(scanner);
                         break;
                     case "5":
                         System.out.println("Sort all books with title");
@@ -78,12 +74,10 @@ public final class BookControlling {
                 showInfo();
             }
             System.out.println("bye bye <3");
-        } finally {
-            scanner.close();
         }
     }
 
-    private void searchWithAuthor() {
+    private void searchWithAuthor(Scanner scanner) {
         System.out.println("Give the family name of the Author: ");
         String author = scanner.next();
         Collection<?> bc = bm.searchWithAuthor(pm.getAllPeopleWithEmail(author));
@@ -119,7 +113,7 @@ public final class BookControlling {
         System.out.println("enter q for quit");
     }
 
-    private void searchWithISBN() {
+    private void searchWithISBN(Scanner scanner) {
 
         String isbn = scanner.next();
         Book b = bm.searchWithISBN(isbn);
@@ -145,9 +139,9 @@ public final class BookControlling {
     }
 
     private void showResult(Collection<?> collection) {
-        Object[] c = collection.toArray();
-        for (int i = 0; i < c.length; i++) {
-            System.out.println(i + ": " + c[i].toString());
+        //更短方法
+        int i = 0; for (Object c : collection) {
+            System.out.println((i++) + ": " + c);
         }
     }
 
