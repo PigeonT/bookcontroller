@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+//显示命名为AbstractItemManager,Abs歧义
 public abstract class AbsItemManager<T extends ItemEntity> implements ItemManager<T> {
     protected String fileName = null;
     protected Class<?> entity;

@@ -3,7 +3,6 @@ package de.pigeon.manager;
 import de.pigeon.model.People;
 import de.pigeon.utils.CSVParser;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -21,13 +20,9 @@ public final class PeopleManager implements Manager<People> {
     }
 
     public Collection<String> getAllPeopleWithEmail(String lastName) {
-        Collection<String> d = new ArrayList<>();
-        collection.stream()
-                .forEach(p -> {
-                    if(p.getNachName().toLowerCase().contains(lastName.toLowerCase()))
-                        d.add(p.getEmail());
-                });
-        return d;
-
+        //stream的用法要加强
+        return collection.stream()
+                .filter(e -> e.getNachName().toLowerCase().contains(lastName.toLowerCase()))
+                .map(e -> e.getEmail()).collect(Collectors.toList());
     }
 }

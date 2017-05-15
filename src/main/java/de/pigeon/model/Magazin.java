@@ -1,5 +1,6 @@
 package de.pigeon.model;
 
+//typo 所有的magazin都拼写错误magazine,如果德语是这样的话也得改,应该考虑标准英语命名
 public final class Magazin extends ItemEntity {
     private String erscheinungsdatum;
 

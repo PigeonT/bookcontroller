@@ -2,6 +2,7 @@ package de.pigeon.model;
 
 public abstract class ItemEntity implements Entity {
     protected String title;
+    //typo ISBN
     protected String IBSN;
     protected String author;
 
@@ -9,6 +10,7 @@ public abstract class ItemEntity implements Entity {
         return this.title;
     }
 
+    //这里的get方法又没有拼写错误了,考虑用ide生成getter然后在把ISBN大写
     public String getISBN() {
         return this.IBSN;
     }
